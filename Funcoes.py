@@ -1,13 +1,13 @@
 #Função Cadastrar Dados
 def cadastrar_dados():
 
-    #Tentativa criar arquivo e salvar dados no mesmo
+    #Tentativa criar arquivo e salvar dados nele mesmo
     try:
 
-        #Abrir arquivo em modo apendice
+        #Abrir arquivo em modo apêndice
         with open('dados_clientes.txt', 'a') as arquivo:
 
-            #declarando variaveis
+            #Solicitar informações do cliente
             nome_cliente = input("Nome: ")
             cpf = input("CPF: ")
             dataNasc = input("Data de Nascimento: ")
@@ -19,17 +19,17 @@ def cadastrar_dados():
             obs = input("Observações: ")
             print("-"*36)
 
-            #Formatar dados
+            #Formatar os dados do cliente
             cliente = f"{nome_cliente},{cpf},{dataNasc},{endereco}, {cep}, {cidade}, {estado}, {telefone}, {obs}, \n"
 
-            #Escrever no arquivo
+            #Escrever os dados no arquivo
             arquivo.write(cliente)
 
             #Exibir mensagem de conclusão
             print("Dados do cliente cadastrados com sucesso!")
 
     except ValueError: 
-        #Captura erros caso for inserido valores fora do formato esperado
+        #Capturar erros caso valores fora do formato esperado sejam inseridos
         print("Valor inválido")
     
     except Exception as e:
@@ -87,8 +87,10 @@ def listar_dados ():
                     print("-"*30)
 
     except FileNotFoundError:
+        #Capturar erros caso o arquivo não seja encontrado
         print("Arquivo de dados não encontrado")
     except Exception as e:
+        #Capturar erros durante o listar dados
         print("Ocorreu um erros ao listar os dados:", str(e))
 
 
@@ -97,8 +99,10 @@ def listar_dados ():
 #Função Atualizar dados
 def atualizar_dados():
 
+    #Solicitar CPF do cliente a ser atualizado
     cpf = input("Digite o CPF do cliente a ser atualizado: ")
 
+    #Variavel booleana para indicar se o cliente foi encontrado
     encontrado = False
 
     #Lista para armazenar os dados atualizados
@@ -115,11 +119,14 @@ def atualizar_dados():
             
             #Repetir sobre cada linha do arquivo
             for linha in linhas:
+                #Separa os dados da linha em uma lista usando a virgula como separador
                 dados = linha.strip().split(',')
+                #Armazena o cpf do cliente
                 cpf_cliente = dados[1]
 
-                #Verficiar CPF
+                #Verficia se o CPF fornecido é igual ao CPF do cliente
                 if cpf == cpf_cliente:
+                    #Marca como encontrado
                     encontrado = True
                     # Mostra na tela os dados do cliente
                     print("-"*30)
@@ -154,21 +161,30 @@ def atualizar_dados():
                     dados[6] = novos_dados['estado']
                     dados[7] = novos_dados['telefone']
                     dados[8] = novos_dados['obs']
-                    
+
+                #Converte a lista de dados de volta para uma string separada por vírgulas
                 linha_atualizada = ','.join(dados) + '\n'
+                #Adiciona a linha atualizada à lista de dados atualizados
+
                 dados_atualizados.append(linha_atualizada)
 
+        #Se o cliente foi encontrado        
         if encontrado:
+            #Abrir arquivo
             with open('dados_clientes.txt', 'w') as arquivo:
                 #Escrever dados atualizados de volta no arquivo
                 arquivo.writelines(dados_atualizados)
                 print("Dados atualizados com sucesso!")
+
+        #Se o cliente não foi encontrado
         else:
-            print("Clientes não encontrado")
+            print("Cliente não encontrado")
     
     except FileNotFoundError:
+        #Capturar erros caso o Arquivo não seja encontrado
         print("Arquivo de dados não encontrado")
     except Exception as e:
+        #Capturar erros durante a atualização dos dados
         print("Ocorreu um erro ao atualizar os dados: ", str(e))
 
 
@@ -176,36 +192,55 @@ def atualizar_dados():
 #Função Deletar Dado
 def deletar_dado():
 
+    #Solicitar CPF do cliente a ser deletado
     cpf = input("Digite o CPF do cliente a ser deletado: ")
 
+    #Tentativa de apagar dados
     try:
+
+        #Abrir arquivo de dados em modo de leitura
         with open ('dados_clientes.txt', 'r') as arquivo:
+
+            #Ler as linhas do arquivo
             linhas = arquivo.readlines()
         
+        #Abrir arquivo de dados em modo de escrita
         with open ('dados_clientes.txt', 'w') as arquivo:
+
+            #Variavel booleana para indicar se o cliente foi encontrado
             encontrado = False
 
+            #Repetir sobre cada linha do arquivo
             for linha in linhas:
+                #Separar os dados da linha em uma lista usando virgula como separador
                 dados = linha.strip().split(',')
+                #Armazena o cpf do cliente
                 cpf_cliente = dados [1]
 
+                #Verificar se o CPF fornecido é giual ao cpf do cliente
                 if cpf == cpf_cliente:
+                    #Marca como encontrado
                     encontrado = True 
-                
+
+                #Se o CPF não corresponder ao CPF do cliente, reescrever o mesmo novamente
                 else: 
                     arquivo.write(linha)
             
+            #Se o cliente foi encontrado
             if encontrado:
                 print("Cliente excluido com sucesso!")
             
+            #Se o cliente não foi encontrado
             else:
                 print("Cliente não encontrado. Nenhum dado foi excluido.")
 
     
     except FileNotFoundError:
+        #Capturar erros caso o arquivo não seja encontrado
         print("Arquivo de dados não encontrado")
     
     except Exception as e:
+        #Capturar erros durante a exclusão dos dados
         print("Ocorreu um erro ao excluir os dados: ", str(e))
 
 
@@ -239,6 +274,7 @@ def backup_dados():
 
 #Exibir MENU
 def exibir_menu():
+    #Exibir opções da nela
     print("--------------- MENU ---------------")
     print("1. Cadastrar novo cliente")
     print("2. Listar dados dos clientes")
@@ -249,26 +285,39 @@ def exibir_menu():
     print("-"*36)
 
 
-#Main para rodar o menu
+#Função principal para rodar o menu
 def main():
+    #Executa um loop infinito até que encontre a instrução 'break'
     while True:
+        #Exibe o menu
         exibir_menu()
+        #Pedir ao usuario que digite o numero da opção desejada
         opcao = input("Digite o numero da opção desejada: ")
+        #Imprime uma linha de separação
         print("-"*36)
 
+        #Verificar qual opção foi selecionada
         if opcao == "1":
+            #Charmar função apra cadastrar dados
             cadastrar_dados()
         elif opcao == "2":
+            #Chamar função para listar os dados
             listar_dados()
         elif opcao == "3":
+            #Chamar função para atualizar os dados
             atualizar_dados()
         elif opcao == "4":
+            #Chamar função para deletar os dados
             deletar_dado()
         elif opcao == "5":
+            #Chamar função para fazer backup dos dados
             backup_dados()
         elif opcao == "0":
+            #Imprime uma mensagem dizendo que esta saindo do sistema
             print("Saindo do sistema...")
+            #Saia do loop
             break
-                
+        
         else: 
+            #Se nenhuma opção valida for selecionada, mostre uma mensagem de erro
             print("Opção inválida.Por favor, escolha uma opção válida")
